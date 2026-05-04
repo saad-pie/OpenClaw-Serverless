@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "tsx watch api/index.ts",
     "build": "tsc",
-    "start": "node dist/index.js"
+    "start": "node dist/index.js",
+    "vercel-build": "echo 'Vercel handles build automatically'"
   },
   "dependencies": {
     "cors": "^2.8.5",
