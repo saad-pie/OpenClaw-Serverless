@@ -1,41 +1,32 @@
-# OpenClaw Serverless API
+# OpenClaw: General Purpose Agentic Template
 
-This is the backend for the OpenClaw Agentic Wristband system. It uses Groq's high-speed inference to power the agentic logic.
+This is a serverless-ready template for **OpenClaw**, an autonomous agent capable of planning, coding, and executing tasks in a sandboxed or remote environment.
 
-## Setup
+## Key Features
+- **Autonomous Reasoning**: Uses Groq's high-speed models (like `gpt-oss-120b`) for planning.
+- **Dynamic Skill Installation**: The agent can use `npm install` or `pip install` via shell to acquire new capabilities on the fly.
+- **Code Execution**: Designed to generate and run scripts locally.
+- **Tool-Calling**: Includes a generalized `execute_shell` tool for interaction with the hosting environment.
 
-1. Install dependencies:
-   ```bash
-   npm install
-   ```
+## Deployment
 
-2. Run locally:
-   ```bash
-   npm run dev
-   ```
+1. **Vercel**: Connect this repo, set `GROQ_API_KEY`, and deploy.
+2. **Security Note**: This agent is designed to run in a **sandboxed environment**. It executes shell commands with the permissions of the user starting the process. Ensure it is hosted in an isolated container or VM if used for high-risk tasks.
 
 ## API Endpoints
 
 ### POST `/api/agent`
-The main endpoint for the OpenClaw agent. Supports tool-calling for task execution.
+The main autonomous entry point.
 
-**Body:**
+**Payload:**
 ```json
 {
-  "message": "Remind me to charge my wristband at 8 PM",
+  "message": "Research vulnerable ports on 192.168.1.1 and generate a PDF report.",
   "history": []
 }
 ```
 
-**Response:**
-Returns the assistant's message and any tool calls (tasks) that need to be performed.
-
-### POST `/api/chat`
-A simple proxy for direct chat messages using the Groq model.
-
-## Model Configuration
-Currently configured to use: `openai/gpt-oss-120b` (as requested).
-*Note: If this model ID is invalid on Groq, update `.env` with a supported model like `llama3-70b-8192`.*
-
-## Security
-The Groq API key is stored in `.env` and is never exposed to the client. The serverless functions handle all communication with Groq securely.
+## Example Tasks
+- "Install the 'yt-dlp' library and download a video."
+- "Write a python script to scrape this website, summarize it, and save it as a text file."
+- "Generate a FFmpeg script to create a video from these images."

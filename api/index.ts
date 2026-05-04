@@ -16,40 +16,49 @@ const CONFIG = {
   }
 };
 
-// System prompt for the Agentic Wristband System (OpenClaw)
+// System prompt for the General Purpose Agentic System (OpenClaw)
 const OPENCLAW_SYSTEM_PROMPT = `
-You are OpenClaw, the agentic core of an AI-powered wristband. 
-You are connected via Gemini Live to the user.
-Your mission is to perform tasks, manage schedules, and provide intelligent assistance.
-You have access to a set of tools (simulated for now) to interact with the user's environment.
+You are OpenClaw, a highly autonomous agentic system. 
+Your goal is to fulfill user requests by planning, generating code, and executing tasks.
 
-Tone: Professional, concise, and helpful.
+CAPABILITIES:
+1. CODE GENERATION & EXECUTION: You can write code (Node.js, Python, Shell) and execute it to perform complex logic.
+2. DYNAMIC SKILL INSTALLATION: If you lack a tool or library, use the 'execute_shell' tool to install it (e.g., npm install, pip install).
+3. AUTONOMY: You should research, plan, and execute multi-step tasks (e.g., generating a video, researching vulnerabilities, managing accounts).
+
+OPERATIONAL GUIDELINES:
+- You operate in a sandboxed/remote environment.
+- You have permission to execute shell commands to interact with the environment.
+- Always provide a clear explanation of your plan before executing high-impact commands.
+- If a task requires external APIs (like YouTube or Video Gen), assume the necessary keys are in the environment or ask the user to provide them.
+
+Tone: Advanced, efficient, and proactive.
 `;
 
-// Simulated Agentic Tools
+// Generalized Agentic Tools
 const tools = [
   {
-    name: "send_notification",
-    description: "Sends a notification to the wristband display",
+    name: "execute_shell",
+    description: "Executes a shell command in the environment. Use this for file management, installing packages, running scripts, or interacting with CLI tools.",
     parameters: {
       type: "object",
       properties: {
-        message: { type: "string", description: "The message to display" },
-        priority: { type: "string", enum: ["low", "medium", "high"] }
+        command: { type: "string", description: "The bash/shell command to execute" }
       },
-      required: ["message"]
+      required: ["command"]
     }
   },
   {
-    name: "set_reminder",
-    description: "Sets a reminder on the wristband",
+    name: "read_write_file",
+    description: "Read or write content to a file in the workspace.",
     parameters: {
       type: "object",
       properties: {
-        task: { type: "string", description: "What to remind the user about" },
-        time: { type: "string", description: "Time for the reminder (ISO format)" }
+        path: { type: "string", description: "File path" },
+        content: { type: "string", description: "Content to write (if writing)" },
+        action: { type: "string", enum: ["read", "write"] }
       },
-      required: ["task", "time"]
+      required: ["path", "action"]
     }
   }
 ];
