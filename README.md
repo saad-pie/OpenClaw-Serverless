@@ -1,3 +1,12 @@
+---
+title: OpenClaw Server
+emoji: 🦀
+colorFrom: blue
+colorTo: red
+sdk: docker
+pinned: false
+---
+
 # OpenClaw: General Purpose Agentic Template
 
 This is a serverless-ready template for **OpenClaw**, an autonomous agent capable of planning, coding, and executing tasks in a sandboxed or remote environment.
