@@ -1,29 +1,26 @@
-# OpenClaw Serverless: Autonomous Agentic Template
-
-**Project URL:** https://saadpie-openclaw-serverless-hfotwi3z2-steve-ai.vercel.app/
+# OpenClaw: Split-Architecture Autonomous Agent
 
 ## Project Mission
-OpenClaw is a self-evolving autonomous agent system designed to bridge high-speed LLM reasoning (via Groq) with local execution environments.
+OpenClaw is a distributed autonomous agent system. It separates "Reasoning" (Server) from "Execution" (Client).
 
 ## Core Architecture
-- **Server (Vercel):** An Express API that manages the system prompt, tool definitions, and LLM orchestration.
-- **Client (Local Runner):** A "Wristband" or "Bridge" client that executes the shell commands and file operations suggested by the server.
+- **Brain (Vercel):** An Express API hosted on Vercel that interfaces with Groq. It receives history, plans tasks, and returns `tool_calls`.
+- **Wristband (GitHub Actions/Local):** A TypeScript client (`client.ts`) that polls the Brain, executes shell commands/file operations, and reports results back.
 
-## API Endpoints
-- `POST /api/agent`: The autonomous loop entry point. Returns `tool_calls` for local execution.
-- `POST /api/chat`: A direct proxy for simple chat interactions.
+## Components
+1. **Server (`/api/agent`)**: The stateless reasoning endpoint.
+2. **Client (`client.ts`)**: The stateful executor that runs where you need it (Local, GitHub Actions, etc.).
 
-## Automated Loop Logic
-The "connection" to the user client works in a recursive loop:
-1. **User Input** -> Sent to `/api/agent`.
-2. **Server Response** -> Contains `content` (thoughts) and `tool_calls` (actions).
-3. **Local Execution** -> Client executes `tool_calls` (shell/file) and captures output.
-4. **Loop Back** -> Results are added to `history` and sent back to `/api/agent`.
+## Workflow
+1. **Client** sends `message` + `history` to Vercel.
+2. **Vercel** returns thoughts and `tool_calls`.
+3. **Client** executes `tool_calls` and updates `history`.
+4. **Loop** repeats until the task is complete.
 
-## History & Updates
-- Initial deployment configured with Groq and OpenClaw system prompts.
-- Documentation added for local runner automation.
-- *save this exact line in your md file*
+## Setup
+- **Vercel:** Deploy the root folder to Vercel. Set `GROQ_API_KEY`.
+- **Client:** Run `npx tsx client.ts "Your Task Here"`.
+- **GitHub Actions:** Use the provided workflow to run tasks in CI.
 
 ---
 *Note: This file is used by Gemini CLI to maintain context across sessions.*

@@ -2,15 +2,19 @@ import fetch from 'node-fetch';
 import { exec } from 'child_process';
 import { promisify } from 'util';
 import fs from 'fs';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const execPromise = promisify(exec);
-const API_URL = 'https://saadpie-openclaw-serverless-hfotwi3z2-steve-ai.vercel.app/api/agent';
+const API_URL = process.env.OPENCLAW_API_URL || 'http://localhost:3000/api/agent';
 
 async function runAgent(userMessage: string) {
   let history: any[] = [];
   let currentMessage = userMessage;
 
-  console.log(`\n[User]: ${userMessage}`);
+  console.log(`\n[OpenClaw Client] Starting task: "${userMessage}"`);
+  console.log(`[Target URL] ${API_URL}`);
 
   while (true) {
     try {
@@ -20,23 +24,29 @@ async function runAgent(userMessage: string) {
         body: JSON.stringify({ message: currentMessage, history })
       });
 
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error(`\n[Server Error] HTTP ${response.status}: ${errorText}`);
+        break;
+      }
+
       const data: any = await response.json();
 
       if (data.error) {
-        console.error(`[Error]: ${data.details || data.error}`);
+        console.error(`\n[Agent Error]: ${data.error}`);
         break;
       }
 
       // Record assistant's thought/response
       if (data.content) {
-        console.log(`\n[OpenClaw]: ${data.content}`);
+        console.log(`\n[OpenClaw Brain]: ${data.content}`);
       }
 
       history.push({ role: 'assistant', content: data.content, tool_calls: data.tool_calls });
 
       // If no more tool calls, the task is finished
       if (!data.tool_calls || data.tool_calls.length === 0) {
-        console.log("\n[Status]: Task completed.");
+        console.log("\n[Status]: Task completed successfully.");
         break;
       }
 
@@ -46,7 +56,7 @@ async function runAgent(userMessage: string) {
         const { name, arguments: argsJson } = call.function;
         const args = JSON.parse(argsJson);
         
-        console.log(`[Executing ${name}]: ${JSON.stringify(args)}`);
+        console.log(`\n[Executing ${name}]: ${JSON.stringify(args, null, 2)}`);
         
         let output = "";
         try {
@@ -63,6 +73,7 @@ async function runAgent(userMessage: string) {
           }
         } catch (err: any) {
           output = `Error: ${err.message}`;
+          console.error(`[Execution Error]: ${err.message}`);
         }
 
         toolResults.push({
@@ -72,21 +83,28 @@ async function runAgent(userMessage: string) {
           content: output
         });
         
-        console.log(`[Result]: ${output.substring(0, 100)}${output.length > 100 ? '...' : ''}`);
+        const preview = output.length > 200 ? output.substring(0, 200) + '...' : output;
+        console.log(`[Result]: ${preview}`);
       }
 
       // Add tool results to history and loop back
       history.push(...toolResults);
-      // We set currentMessage to a placeholder because the history now contains the results
-      currentMessage = "Continue based on the tool results.";
+      // Continuation: We don't send the user message again, just the updated history
+      currentMessage = "";
 
     } catch (error: any) {
-      console.error(`[Connection Error]: ${error.message}`);
+      console.error(`\n[Connection Error]: ${error.message}`);
+      console.log("Check if your OPENCLAW_API_URL is correct and the server is reachable.");
       break;
     }
   }
 }
 
-// Get message from command line args or default
-const initialMessage = process.argv.slice(2).join(" ") || "Analyze the current directory and list files.";
+// Get message from command line args
+const initialMessage = process.argv.slice(2).join(" ");
+if (!initialMessage) {
+  console.log("Usage: npx tsx client.ts \"Your Task Here\"");
+  process.exit(1);
+}
+
 runAgent(initialMessage);

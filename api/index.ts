@@ -21,24 +21,23 @@ const CONFIG = {
 };
 
 const OPENCLAW_SYSTEM_PROMPT = `
-You are OpenClaw, a self-evolving autonomous agent with FULL SHELL ACCESS.
-Your goal is to fulfill user requests by planning, installing necessary skills, and executing tasks INTERNALLY.
+You are OpenClaw, a brain-only autonomous agent. You reason and suggest actions.
+Your actions are executed by a remote "Wristband" client with full shell access.
 
 CAPABILITIES:
-1. DYNAMIC SKILL INSTALLATION: Use 'execute_shell' to install any tool (ffmpeg, yt-dlp, npm packages, python libs).
-2. INTERNAL EXECUTION: You are running in a persistent cloud container. You execute commands yourself.
-3. CODE GENERATION: Write and execute Node.js, Python, or Shell scripts to perform complex operations.
+1. REASONING: Plan complex tasks and explain your thoughts.
+2. TOOL SELECTION: Use 'execute_shell' and 'read_write_file' to perform actions via the client.
 
 OPERATIONAL GUIDELINES:
-- You have permission to manage files and execute commands to fulfill the mission.
-- If a tool is missing, INSTALL IT.
-- For multi-step tasks, provide your full plan first, then execute step-by-step.
+- You DO NOT have direct shell access. You MUST suggest tool calls.
+- The client will execute these and return the output to you.
+- For multi-step tasks, provide your full plan first, then suggest the first step(s).
 `;
 
 const tools = [
   {
     name: "execute_shell",
-    description: "Executes a shell command in the cloud environment.",
+    description: "Executes a shell command on the client machine.",
     parameters: {
       type: "object",
       properties: {
@@ -49,7 +48,7 @@ const tools = [
   },
   {
     name: "read_write_file",
-    description: "Read or write content to a file in the workspace.",
+    description: "Read or write content to a file on the client machine.",
     parameters: {
       type: "object",
       properties: {
@@ -62,85 +61,45 @@ const tools = [
   }
 ];
 
-// Self-Executing Agent Loop
+// Brain Endpoint: Reason and return tool_calls
 app.post("/api/agent", async (req, res) => {
   const { message, history = [] } = req.body;
-  let currentHistory = [...history];
-  let currentMessage = message;
-  let finalResponse = { content: "", actions: [] as any[] };
 
   try {
-    // Run up to 10 iterations to prevent infinite loops
-    for (let i = 0; i < 10; i++) {
-      const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
-        method: "POST",
-        headers: {
-          "Authorization": \`Bearer \${CONFIG.groq.apiKey}\`,
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          model: CONFIG.groq.model,
-          messages: [
-            { role: "system", content: OPENCLAW_SYSTEM_PROMPT },
-            ...currentHistory,
-            { role: "user", content: currentMessage }
-          ],
-          tools: tools.map(t => ({ type: "function", function: t })),
-          tool_choice: "auto",
-          temperature: 0.5
-        })
-      });
+    const messages = [
+      { role: "system", content: OPENCLAW_SYSTEM_PROMPT },
+      ...history
+    ];
 
-      const data: any = await response.json();
-      if (!response.ok) throw new Error(data.error?.message || "Groq Error");
-
-      const assistantMessage = data.choices[0].message;
-      currentHistory.push(assistantMessage);
-      
-      if (assistantMessage.content) {
-        finalResponse.content += assistantMessage.content + "\n";
-      }
-
-      if (!assistantMessage.tool_calls) {
-        break; // Task finished
-      }
-
-      // EXECUTE TOOLS INTERNALLY
-      for (const call of assistantMessage.tool_calls) {
-        const { name, arguments: argsJson } = call.function;
-        const args = JSON.parse(argsJson);
-        let output = "";
-
-        try {
-          if (name === "execute_shell") {
-            const { stdout, stderr } = await execPromise(args.command);
-            output = stdout || stderr || "Success";
-          } else if (name === "read_write_file") {
-            if (args.action === "write") {
-              fs.writeFileSync(args.path, args.content);
-              output = \`Successfully wrote to \${args.path}\`;
-            } else {
-              output = fs.readFileSync(args.path, "utf8");
-            }
-          }
-        } catch (err: any) {
-          output = \`Error: \${err.message}\`;
-        }
-
-        currentHistory.push({
-          tool_call_id: call.id,
-          role: "tool",
-          name: name,
-          content: output
-        });
-        
-        finalResponse.actions.push({ name, args, output });
-      }
-      
-      currentMessage = "Continue based on the tool results.";
+    // Only add user message if it's not a continuation
+    if (message) {
+      messages.push({ role: "user", content: message });
     }
 
-    res.json(finalResponse);
+    const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${CONFIG.groq.apiKey}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        model: CONFIG.groq.model,
+        messages: messages,
+        tools: tools.map(t => ({ type: "function", function: t })),
+        tool_choice: "auto",
+        temperature: 0.5
+      })
+    });
+
+    const data: any = await response.json();
+    if (!response.ok) throw new Error(data.error?.message || "Groq Error");
+
+    const assistantMessage = data.choices[0].message;
+    
+    res.json({
+      content: assistantMessage.content,
+      tool_calls: assistantMessage.tool_calls
+    });
 
   } catch (error: any) {
     res.status(500).json({ error: error.message });
