@@ -5,9 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch api/index.ts",
-    "build": "tsc",
-    "start": "node dist/index.js",
-    "vercel-build": "echo 'Vercel handles build automatically'"
+    "compile": "tsc",
+    "start": "node dist/index.js"
   },
   "dependencies": {
     "@types/node-fetch": "^2.6.13",
