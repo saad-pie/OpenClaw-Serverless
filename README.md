@@ -12,10 +12,10 @@ pinned: false
 This is a serverless-ready template for **OpenClaw**, an autonomous agent capable of planning, coding, and executing tasks in a sandboxed or remote environment.
 
 ## Key Features
-- **Autonomous Reasoning**: Uses Groq's high-speed models (like `gpt-oss-120b`) for planning.
+- **Autonomous Reasoning**: Uses Groq's high-speed models or Gemini for planning.
 - **Dynamic Skill Installation**: The agent can use `npm install` or `pip install` via shell to acquire new capabilities on the fly.
 - **Code Execution**: Designed to generate and run scripts locally.
-- **Tool-Calling**: Includes a generalized `execute_shell` tool for interaction with the hosting environment.
+- **Tool-Calling**: Includes a generalized set of tools for interaction with the hosting environment.
 
 ## Deployment
 
