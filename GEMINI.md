@@ -11,11 +11,10 @@ OpenClaw is a distributed autonomous agent system. It separates "Reasoning" (Ser
 1. **Server (`/api/agent`)**: The stateless reasoning endpoint.
 2. **Client (`client.ts`)**: The stateful executor that runs where you need it (Local, GitHub Actions, etc.).
 
-## Analysis (May 2026 Refresh)
-- **Deployment Fix**: `vercel.json` updated with rewrites to route all traffic to `/api`.
-- **Routing Fix**: `api/index.ts` now handles POST on `/` and `/api/agent`.
-- **Automated Workflow**: Configured to push fixes directly to `saad-pie/OpenClaw-Serverless` using PAT.
-- **Latest Commit**: `0d862b0` (Switched to `@vercel/node` builder to fix missing output directory error).
+## Operational Mandates
+- **Push Everytime**: Every modification (fix, feature, or doc update) MUST be committed and pushed to GitHub immediately to trigger Vercel redeployment.
+- **Truncation**: Client MUST truncate large outputs (>2000 chars) to protect LLM token limits.
+- **Routing**: Always target the base URL; `vercel.json` handles the internal routing.
 
 ## Workflow
 1. **Client** sends `message` + `history` to Vercel.
