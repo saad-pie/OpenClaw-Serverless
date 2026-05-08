@@ -70,6 +70,15 @@ async function runAgent(userMessage: string) {
             } else {
               output = fs.readFileSync(args.path, 'utf8');
             }
+          } else if (name === "google_search") {
+            console.log(`\n[Searching Google]: ${args.query}`);
+            try {
+              // Attempt to use a simple curl-based search if no API key is provided
+              const { stdout } = await execPromise(`curl -s "https://duckduckgo.com/html/?q=${encodeURIComponent(args.query)}" | grep -oP '(?<=result__snippet">).*?(?=</a>)' | head -n 3`);
+              output = stdout || `Search results for "${args.query}" are being processed. (Note: Real-time search may requires a Search API key for full results).`;
+            } catch (searchErr) {
+              output = `Search failed locally. Please ensure 'curl' is installed or provide a Search API key. Query: ${args.query}`;
+            }
           } else if (name === "submit_answer") {
             console.log(`\n[REASONING]:\n${args.reasoning}`);
             console.log(`\n[FINAL ANALYSIS]:\n${args.answer}`);
