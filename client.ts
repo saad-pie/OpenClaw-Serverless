@@ -7,7 +7,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const execPromise = promisify(exec);
-const API_URL = process.env.OPENCLAW_API_URL || 'http://localhost:3000/api/agent';
+const API_URL = process.env.OPENCLAW_API_URL || 'https://saadpie-openclaw-serverless.vercel.app/';
 
 async function runAgent(userMessage: string) {
   let history: any[] = [];
