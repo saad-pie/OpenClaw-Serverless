@@ -62,7 +62,7 @@ const tools = [
 ];
 
 // Brain Endpoint: Reason and return tool_calls
-app.post("/api/agent", async (req, res) => {
+app.post(["/", "/api/agent"], async (req, res) => {
   const { message, history = [] } = req.body;
 
   try {
