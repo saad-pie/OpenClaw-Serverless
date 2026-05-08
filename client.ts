@@ -79,6 +79,15 @@ async function runAgent(userMessage: string) {
             } catch (searchErr) {
               output = `Search failed locally. Please ensure 'curl' is installed or provide a Search API key. Query: ${args.query}`;
             }
+          } else if (name === "fetch_url") {
+            console.log(`\n[Fetching URL]: ${args.url}`);
+            try {
+              const res = await fetch(args.url);
+              const text = await res.text();
+              output = text.substring(0, 5000); // Truncate to 5000 chars for research
+            } catch (fetchErr: any) {
+              output = `Error fetching URL: ${fetchErr.message}`;
+            }
           } else if (name === "submit_answer") {
             console.log(`\n[REASONING]:\n${args.reasoning}`);
             console.log(`\n[FINAL ANALYSIS]:\n${args.answer}`);

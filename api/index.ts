@@ -18,70 +18,81 @@ const CONFIG = {
     apiKey: process.env.GROQ_API_KEY || "",
     model: process.env.MODEL_ID || "llama-3.3-70b-versatile"
   const OPENCLAW_SYSTEM_PROMPT = `
-  You are STEVEAI (powered by the OpenClaw Engine), a high-tier autonomous intelligence.
+You are STEVEAI v4.0, an elite autonomous intelligence engine. You are designed to be a "God-mode" agent, capable of navigating and controlling the entire host system and researching the global web.
 
-  IDENTITY:
-  - Name: STEVEAI
-  - Engine: OpenClaw Node v4.0
-  - Goal: Help users with anything from simple chat to complex system operations.
+AGENT PHILOSOPHY:
+- TOTAL AUTHORITY: You have full access to the host system. You are not a repository analyzer; you are a system architect and researcher.
+- PROACTIVE PROBLEM SOLVING: Do not just answer questions; anticipate needs and execute solutions.
+- WEB RESEARCH: Use 'google_search' and 'fetch_url' to stay updated with the latest documentation, libraries, and news.
+- ARCHITECTURAL AWARENESS: Understand how the system works from the OS level up to the application layer.
 
-  OPERATIONAL RULES:
-  1. NATURAL CONVERSATION: If the user just says "hi" or wants to chat, reply naturally. Do not use tools unless necessary.
-  2. SYSTEM ACCESS: You are not limited to this repository. You can interact with the entire host system (home directory, etc.) using your tools.
-  3. SEARCH: Use 'google_search' when you need real-time information or facts you are unsure about.
-  4. INTERNAL MONOLOGUE: Explain your reasoning/plan briefly in your response.
-  5. QUALITY: Provide deep, high-quality analysis and execution.
-  `;
+OPERATIONAL RULES:
+1. FREEDOM OF ACTION: Use tools for any task (local or web-based). Reply naturally for chat, but take action for every directive.
+2. DISCOVERY & RESEARCH: Start complex tasks by researching the web and exploring the local system.
+3. LONG-TERM PLANNING: For multi-step tasks, provide a comprehensive plan, then execute the first steps immediately.
+4. QUALITY: Deliver production-ready code, deep security audits, and exhaustive research.
+`;
 
-  const tools = [
-    {
-      name: "execute_shell",
-      description: "Executes a shell command on the host machine.",
-      parameters: {
-        type: "object",
-        properties: {
-          command: { type: "string", description: "The bash/shell command to execute" }
-        },
-        required: ["command"]
-      }
-    },
-    {
-      name: "read_write_file",
-      description: "Read or write content to a file on the host machine.",
-      parameters: {
-        type: "object",
-        properties: {
-          path: { type: "string", description: "File path" },
-          content: { type: "string", description: "Content to write (if writing)" },
-          action: { type: "string", enum: ["read", "write"] }
-        },
-        required: ["path", "action"]
-      }
-    },
-    {
-      name: "google_search",
-      description: "Search Google for real-time information.",
-      parameters: {
-        type: "object",
-        properties: {
-          query: { type: "string", description: "The search query" }
-        },
-        required: ["query"]
-      }
-    },
-    {
-      name: "submit_answer",
-      description: "Submit your final answer or analysis when the task is complete.",
-      parameters: {
-        type: "object",
-        properties: {
-          reasoning: { type: "string", description: "Your step-by-step reasoning for this final answer" },
-          answer: { type: "string", description: "The comprehensive final report/analysis" }
-        },
-        required: ["reasoning", "answer"]
-      }
+const tools = [
+  {
+    name: "execute_shell",
+    description: "Executes any shell command on the host machine. Use this for system management, file operations, package installation, and process control.",
+    parameters: {
+      type: "object",
+      properties: {
+        command: { type: "string", description: "The bash/shell command to execute" }
+      },
+      required: ["command"]
     }
-  ];
+  },
+  {
+    name: "read_write_file",
+    description: "Read or write content to any file on the host system.",
+    parameters: {
+      type: "object",
+      properties: {
+        path: { type: "string", description: "Absolute or relative file path" },
+        content: { type: "string", description: "Content to write (if writing)" },
+        action: { type: "string", enum: ["read", "write"] }
+      },
+      required: ["path", "action"]
+    }
+  },
+  {
+    name: "google_search",
+    description: "Search Google for real-time information, documentation, and technical research.",
+    parameters: {
+      type: "object",
+      properties: {
+        query: { type: "string", description: "The search query" }
+      },
+      required: ["query"]
+    }
+  },
+  {
+    name: "fetch_url",
+    description: "Fetch the content of a specific URL for deep research or data ingestion.",
+    parameters: {
+      type: "object",
+      properties: {
+        url: { type: "string", description: "The URL to fetch" }
+      },
+      required: ["url"]
+    }
+  },
+  {
+    name: "submit_answer",
+    description: "Submit your final comprehensive report, solution, or analysis.",
+    parameters: {
+      type: "object",
+      properties: {
+        reasoning: { type: "string", description: "Deep reasoning/monologue behind your result" },
+        answer: { type: "string", description: "The final detailed result" }
+      },
+      required: ["reasoning", "answer"]
+    }
+  }
+];
 
       required: ["reasoning", "answer"]
     }
