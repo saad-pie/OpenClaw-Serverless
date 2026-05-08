@@ -1,25 +1,26 @@
-# OpenClaw: General-Purpose Agentic Engine
+# OpenClaw: Elite Autonomous Agentic Engine
 
 ## Project Mission
-OpenClaw is a flexible, autonomous agentic engine designed for serverless environments. It enables high-speed reasoning and system-level operations via a stateless API.
+OpenClaw is a high-tier autonomous intelligence system designed for complex reasoning, system-level operations, and dynamic skill acquisition. It operates as a stateless "Brain" that controls a remote or local environment.
 
 ## Core Identity
-- **Name**: OpenClaw
-- **Version**: 4.1 (Generalized)
+- **Name**: OpenClaw (Elite Agent)
+- **Version**: 4.2 (Autonomous)
 - **Engine**: Node.js / Groq / Gemini
 
 ## Capabilities
-- **Natural Chat**: Capable of standard conversation without forced tool usage.
-- **System Integration**: Authorized for host system interaction via shell and file tools.
-- **Web Research**: Integrated Google Search and URL fetching.
-- **Efficient Reasoning**: Brief, focused plan explanation before actions.
+- **Dynamic Skill Acquisition**: The agent can create its own tools by installing packages (`npm`, `pip`, `apt`) and writing custom scripts to solve any problem.
+- **Proactive Problem Solving**: Deep research capabilities using Google Search and URL fetching, with a mandate to tackle situations from multiple angles.
+- **System Authority**: Full access to the host environment for file management, process control, and architectural tasks.
+- **Natural Interaction**: Friendly and direct for casual chat, but transitions to a high-precision agent for tasks.
 
 ## Operational Mandates
 - **Push Everytime**: Continuous deployment to Vercel via GitHub.
 - **GitHub Push Command**: `git push https://saad-pie:<PAT>@github.com/saad-pie/OpenClaw-Serverless.git main`
+- **Deep Reasoning**: Mandatory step-by-step monologue before any tool execution.
+- **Resilience**: If a tool or search fails, the agent must iterate and find an alternative solution rather than surrendering.
 - **Stateless**: The Brain (API) maintains no local state; state is managed via `history` in requests.
 - **Standardized Tools**: Uses a consistent set of tools (`execute_shell`, `read_write_file`, `google_search`, etc.).
-- **Neutral Branding**: Identifies as OpenClaw.
 
 ## Workflow
 1. **Client** sends `message` + `history` to the API.
