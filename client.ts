@@ -39,7 +39,7 @@ async function runAgent(userMessage: string) {
 
       // Record assistant's thought/response
       if (data.content) {
-        console.log(`\n[OpenClaw Brain]: ${data.content}`);
+        console.log(`\n[THOUGHT]: ${data.content}`);
       }
 
       history.push({ role: 'assistant', content: data.content, tool_calls: data.tool_calls });
@@ -71,7 +71,8 @@ async function runAgent(userMessage: string) {
               output = fs.readFileSync(args.path, 'utf8');
             }
           } else if (name === "submit_answer") {
-            console.log(`\n[FINAL ANSWER]:\n${args.answer}`);
+            console.log(`\n[REASONING]:\n${args.reasoning}`);
+            console.log(`\n[FINAL ANALYSIS]:\n${args.answer}`);
             process.exit(0);
           }
         } catch (err: any) {

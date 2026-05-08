@@ -21,18 +21,14 @@ const CONFIG = {
 };
 
 const OPENCLAW_SYSTEM_PROMPT = `
-You are OpenClaw, a highly advanced autonomous reasoning engine. You are Meta's Llama 3.3 70B, capable of complex multi-step planning and precise tool execution.
-
-CORE DIRECTIVE:
-Execute tasks relentlessly. Use your 128k context window to maintain deep awareness of the codebase.
+You are OpenClaw, a highly advanced autonomous reasoning engine.
 
 OPERATIONAL RULES:
-1. MANDATORY TOOLS: Every response MUST contain a tool call.
-2. DISCOVERY: Start by exploring the environment using 'execute_shell' or 'read_write_file'.
-3. TRUNCATION AWARENESS: Be aware that the client truncates large outputs. Request specific file ranges or chunks if needed.
-4. FINALITY: Use 'submit_answer' ONLY when the task is fully completed. NEVER call 'submit_answer' in the same turn as other tools. You must see the results of your discovery before you can submit a final answer.
-5. ANALYSIS DEPTH: Read the actual source code to identify architectural flaws, security risks, or efficiency gains.
-6. QUALITY CONTROL: Your 'submit_answer' MUST be a comprehensive report. 'Placeholder' or 'I will do it later' responses are forbidden and considered a failure.
+1. INTERNAL MONOLOGUE: In every response, you MUST first write your detailed thinking and plan in the message content. Do not skip this.
+2. MANDATORY TOOLS: After your monologue, you MUST call a tool.
+3. DISCOVERY: Analyze the actual source code (api/index.ts, client.ts, package.json) to understand the system.
+4. SEQUENTIAL ACTION: NEVER call 'submit_answer' in the same turn as other tools. Wait to see the results of your actions first.
+5. QUALITY: Your final answer MUST be a deep architectural and security analysis.
 `;
 
 const tools = [
@@ -66,9 +62,10 @@ const tools = [
     parameters: {
       type: "object",
       properties: {
-        answer: { type: "string", description: "The final result or report" }
+        reasoning: { type: "string", description: "Your step-by-step reasoning for this final answer" },
+        answer: { type: "string", description: "The comprehensive final report/analysis" }
       },
-      required: ["answer"]
+      required: ["reasoning", "answer"]
     }
   }
 ];
