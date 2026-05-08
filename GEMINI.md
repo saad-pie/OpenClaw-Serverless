@@ -15,7 +15,7 @@ OpenClaw is a distributed autonomous agent system. It separates "Reasoning" (Ser
 - **Deployment Fix**: `vercel.json` updated with rewrites to route all traffic to `/api`.
 - **Routing Fix**: `api/index.ts` now handles POST on `/` and `/api/agent`.
 - **Automated Workflow**: Configured to push fixes directly to `saad-pie/OpenClaw-Serverless` using PAT.
-- **Latest Commit**: `d57f62a` (Fix Vercel 404 and routing).
+- **Latest Commit**: `236c50b` (Added `vercel-build` script to fix deployment failure).
 
 ## Workflow
 1. **Client** sends `message` + `history` to Vercel.
