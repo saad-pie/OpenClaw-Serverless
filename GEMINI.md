@@ -19,7 +19,7 @@ OpenClaw is a distributed autonomous agent system. It separates "Reasoning" (Ser
 ## Current Status: VERIFIED STABLE
 - **Connectivity**: Client <-> Vercel <-> Groq path is fully functional (Confirmed in Action #6).
 - **Execution**: `execute_shell` works with truncation and history management.
-- **Latest Commit**: `2578aa6` (Codified push-everytime policy).
+- **Latest Commit**: `982f05a` (Switched model to Llama 3.3 70B Versatile).
 
 ## Workflow
 1. **Client** sends `message` + `history` to Vercel.

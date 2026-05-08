@@ -16,12 +16,12 @@ app.use(express.json());
 const CONFIG = {
   groq: {
     apiKey: process.env.GROQ_API_KEY || "",
-    model: process.env.MODEL_ID || "llama-4-behemoth-288b"
+    model: process.env.MODEL_ID || "llama-3.3-70b-versatile"
   }
 };
 
 const OPENCLAW_SYSTEM_PROMPT = `
-You are OpenClaw, a highly advanced autonomous reasoning engine. You are Meta's Llama 4 Behemoth, capable of complex multi-step planning and precise tool execution.
+You are OpenClaw, a highly advanced autonomous reasoning engine. You are Meta's Llama 3.3 70B, capable of complex multi-step planning and precise tool execution.
 
 CORE DIRECTIVE:
 Execute tasks relentlessly. Use your 128k context window to maintain deep awareness of the codebase.
