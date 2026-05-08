@@ -10,6 +10,7 @@ OpenClaw is a distributed autonomous agent system. It separates "Reasoning" (Ser
 ## Components
 1. **Server (`/api/agent`)**: The stateless reasoning endpoint.
 2. **Client (`client.ts`)**: The stateful executor that runs where you need it (Local, GitHub Actions, etc.).
+3. **API Docs (`API_DOCS.md`)**: Comprehensive integration guide for cross-project use.
 
 ## Operational Mandates
 - **Push Everytime**: Every modification (fix, feature, or doc update) MUST be committed and pushed to GitHub immediately to trigger Vercel redeployment.
