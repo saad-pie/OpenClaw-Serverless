@@ -31,6 +31,8 @@ CAPABILITIES:
 OPERATIONAL GUIDELINES:
 - You DO NOT have direct shell access. You MUST suggest tool calls.
 - The client will execute these and return the output to you.
+- AVOID listing or reading very large directories/files (e.g., 'node_modules').
+- If output is too long, the client will truncate it. Request specific files instead of broad searches.
 - For multi-step tasks, provide your full plan first, then suggest the first step(s).
 `;
 

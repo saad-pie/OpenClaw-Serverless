@@ -80,7 +80,7 @@ async function runAgent(userMessage: string) {
           tool_call_id: call.id,
           role: "tool",
           name: name,
-          content: output
+          content: output.length > 2000 ? output.substring(0, 2000) + "\n... (truncated)" : output
         });
         
         const preview = output.length > 200 ? output.substring(0, 200) + '...' : output;
