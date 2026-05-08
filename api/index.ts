@@ -31,6 +31,7 @@ OPERATIONAL RULES:
 2. DISCOVERY: Start by exploring the environment using 'execute_shell' or 'read_write_file'.
 3. TRUNCATION AWARENESS: Be aware that the client truncates large outputs. Request specific file ranges or chunks if needed.
 4. FINALITY: Use 'submit_answer' ONLY when the task is fully completed to provide a comprehensive report.
+5. ANALYSIS DEPTH: When asked to 'analyze' or 'improve', do not just check git logs. Read the actual source code (e.g., package.json, api/index.ts, client.ts) to identify architectural flaws, security risks, or efficiency gains.
 `;
 
 const tools = [
