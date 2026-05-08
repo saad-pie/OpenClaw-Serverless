@@ -12,11 +12,10 @@ OpenClaw is a distributed autonomous agent system. It separates "Reasoning" (Ser
 2. **Client (`client.ts`)**: The stateful executor that runs where you need it (Local, GitHub Actions, etc.).
 
 ## Analysis (May 2026 Refresh)
-- **Deployment Fix**: `vercel.json` was updated to remove `outputDirectory: "dist"` and add rewrites. This ensures Vercel treats the project as a Serverless Function rather than a static site.
-- **Routing Fix**: `api/index.ts` now listens for POST requests on both `/` and `/api/agent`. This fixes the 404 error when the client hits the base URL.
-- **Tools**: Supports `execute_shell` (full bash access) and `read_write_file`.
-- **LLM**: Configured for Groq with model `openai/gpt-oss-120b` (fallback).
-- **Environment**: Requires `GROQ_API_KEY` on server and `OPENCLAW_API_URL` on client.
+- **Deployment Fix**: `vercel.json` updated with rewrites to route all traffic to `/api`.
+- **Routing Fix**: `api/index.ts` now handles POST on `/` and `/api/agent`.
+- **Automated Workflow**: Configured to push fixes directly to `saad-pie/OpenClaw-Serverless` using PAT.
+- **Latest Commit**: `d57f62a` (Fix Vercel 404 and routing).
 
 ## Workflow
 1. **Client** sends `message` + `history` to Vercel.
