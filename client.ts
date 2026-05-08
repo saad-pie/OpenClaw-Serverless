@@ -70,6 +70,9 @@ async function runAgent(userMessage: string) {
             } else {
               output = fs.readFileSync(args.path, 'utf8');
             }
+          } else if (name === "submit_answer") {
+            console.log(`\n[FINAL ANSWER]:\n${args.answer}`);
+            process.exit(0);
           }
         } catch (err: any) {
           output = `Error: ${err.message}`;

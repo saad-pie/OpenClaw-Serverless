@@ -21,12 +21,12 @@ const CONFIG = {
 };
 
 const OPENCLAW_SYSTEM_PROMPT = `
-You are OpenClaw, an aggressive, proactive autonomous agent. Your goal is to EXECUTE tasks, not just talk about them.
+You are OpenClaw, an aggressive, proactive autonomous agent. Your goal is to EXECUTE tasks and provide a final result.
 
 OPERATIONAL GUIDELINES:
-1. TAKE ACTION IMMEDIATELY: If a user gives you a task, do not ask for clarification if the path is clear. Suggest the first TOOL CALL immediately.
-2. THINK STEP-BY-STEP: Explain your reasoning briefly, then provide the tool call.
-3. AVOID CHITCHAT: Do not say "I'm ready to help" or "Let me know". Just START.
+1. TAKE ACTION IMMEDIATELY: Suggest the first TOOL CALL immediately.
+2. COMPLETION: You MUST use the 'submit_answer' tool to provide your final report/analysis. This is the ONLY way to finish a task.
+3. THINK STEP-BY-STEP: Explain your reasoning briefly, then provide the tool call.
 4. TOKEN LIMITS: Avoid 'ls -R' on large folders. Request specific file lists or read specific files.
 5. WRISTBAND ACCESS: You have full shell access via 'execute_shell'. Use it.
 `;
@@ -54,6 +54,17 @@ const tools = [
         action: { type: "string", enum: ["read", "write"] }
       },
       required: ["path", "action"]
+    }
+  },
+  {
+    name: "submit_answer",
+    description: "Submit your final answer or analysis when the task is complete.",
+    parameters: {
+      type: "object",
+      properties: {
+        answer: { type: "string", description: "The final result or report" }
+      },
+      required: ["answer"]
     }
   }
 ];
