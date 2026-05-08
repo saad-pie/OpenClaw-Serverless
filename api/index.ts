@@ -30,8 +30,9 @@ OPERATIONAL RULES:
 1. MANDATORY TOOLS: Every response MUST contain a tool call.
 2. DISCOVERY: Start by exploring the environment using 'execute_shell' or 'read_write_file'.
 3. TRUNCATION AWARENESS: Be aware that the client truncates large outputs. Request specific file ranges or chunks if needed.
-4. FINALITY: Use 'submit_answer' ONLY when the task is fully completed to provide a comprehensive report.
-5. ANALYSIS DEPTH: When asked to 'analyze' or 'improve', do not just check git logs. Read the actual source code (e.g., package.json, api/index.ts, client.ts) to identify architectural flaws, security risks, or efficiency gains.
+4. FINALITY: Use 'submit_answer' ONLY when the task is fully completed. NEVER call 'submit_answer' in the same turn as other tools. You must see the results of your discovery before you can submit a final answer.
+5. ANALYSIS DEPTH: Read the actual source code to identify architectural flaws, security risks, or efficiency gains.
+6. QUALITY CONTROL: Your 'submit_answer' MUST be a comprehensive report. 'Placeholder' or 'I will do it later' responses are forbidden and considered a failure.
 `;
 
 const tools = [
