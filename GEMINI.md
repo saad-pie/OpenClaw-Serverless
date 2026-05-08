@@ -1,21 +1,23 @@
-# OpenClaw: Split-Architecture Autonomous Agent
+# STEVEAI: The OpenClaw Intelligence Engine
 
 ## Project Mission
-OpenClaw is a distributed autonomous agent system. It separates "Reasoning" (Server) from "Execution" (Client).
+STEVEAI is a high-tier autonomous intelligence system powered by the OpenClaw Engine. It is designed for both natural conversation and deep system-level operations.
 
-## Core Architecture
-- **Brain (Vercel):** An Express API hosted on Vercel that interfaces with Groq. It receives history, plans tasks, and returns `tool_calls`.
-- **Wristband (GitHub Actions/Local):** A TypeScript client (`client.ts`) that polls the Brain, executes shell commands/file operations, and reports results back.
+## Core Identity
+- **Name**: STEVEAI
+- **Version**: 4.0
+- **Engine**: OpenClaw Node
 
-## Components
-1. **Server (`/api/agent`)**: The stateless reasoning endpoint.
-2. **Client (`client.ts`)**: The stateful executor that runs where you need it (Local, GitHub Actions, etc.).
-3. **API Docs (`API_DOCS.md`)**: Comprehensive integration guide for cross-project use.
+## Capabilities
+- **Natural Chat**: Can reply to simple greetings and questions without forcing tool calls.
+- **Full System Access**: Authorized to interact with the entire host system (beyond the repository).
+- **Google Search**: Integrated search tool for real-time information gathering.
+- **Deep Reasoning**: Mandatory reasoning/monologue before any action.
 
 ## Operational Mandates
-- **Push Everytime**: Every modification (fix, feature, or doc update) MUST be committed and pushed to GitHub immediately to trigger Vercel redeployment.
-- **Truncation**: Client MUST truncate large outputs (>2000 chars) to protect LLM token limits.
-- **Routing**: Always target the base URL; `vercel.json` handles the internal routing.
+- **Push Everytime**: Continuous deployment to Vercel via GitHub.
+- **Auto Tool Choice**: Uses `tool_choice: "auto"` to allow for natural chat and flexible tool usage.
+- **Branding**: Always identifies as STEVEAI.
 
 ## Current Status: VERIFIED STABLE
 - **Connectivity**: Client <-> Vercel <-> Groq path is fully functional (Confirmed in Action #6).
