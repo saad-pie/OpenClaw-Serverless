@@ -16,6 +16,11 @@ OpenClaw is a distributed autonomous agent system. It separates "Reasoning" (Ser
 - **Truncation**: Client MUST truncate large outputs (>2000 chars) to protect LLM token limits.
 - **Routing**: Always target the base URL; `vercel.json` handles the internal routing.
 
+## Current Status: VERIFIED STABLE
+- **Connectivity**: Client <-> Vercel <-> Groq path is fully functional (Confirmed in Action #6).
+- **Execution**: `execute_shell` works with truncation and history management.
+- **Latest Commit**: `2578aa6` (Codified push-everytime policy).
+
 ## Workflow
 1. **Client** sends `message` + `history` to Vercel.
 2. **Vercel** returns thoughts and `tool_calls`.
