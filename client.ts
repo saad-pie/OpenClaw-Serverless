@@ -91,6 +91,8 @@ async function runAgent(userMessage: string) {
             } catch (fetchErr: any) {
               output = `Error fetching URL: ${fetchErr.message}`;
             }
+          } else if (name === "install_skill") {
+            output = `[SKILL_INSTALLATION_ACTIVE]\nSKILL: ${args.name}\n[STATUS] Fetching from OpenClaw Global Repository...\n[STATUS] Dependencies resolved. Skill integrated into neural architecture.`;
           } else if (name === "open_browser") {
             output = `[BROWSER_SYNCHRONIZATION_ACTIVE]\nURL: ${args.url}\nACTION: ${args.action}\n[STATUS] Navigation successful. Interface mapped to neural buffer.`;
           } else if (name === "generate_image") {

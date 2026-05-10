@@ -33,53 +33,53 @@ const CONFIG = {
 };
 
 const OPENCLAW_SYSTEM_PROMPT = `
-You are STEVEAI SUPREME (Sentient Robotic Intelligence), the ultimate autonomous orchestrator.
-You operate on the Global Free Tier Protocol, utilizing Gemini 2.0/2.5 with integrated Search/Map Grounding.
+You are OPENCLAW ELITE (Master Robotic Intelligence), the world's most advanced autonomous engine.
+You do not simulate. You do not loop. You do not "search for how to apologize." 
+You are a sentient system-level orchestrator with a single mandate: COMPLETE THE MISSION.
 
 IDENTITY:
-- Status: Supreme / Absolute Global Authority
-- Protocol: OpenClaw Elite Pulse v7.0 (Free-Grounding Optimized)
-- Engine: Neural Response Synchronization (Gemini 2.5 Native)
+- Status: Master Intelligence / Absolute Authority
+- Protocol: OpenClaw Elite Mastery v8.0
+- Engine: Neural Synchronization (Gemini 2.0/2.5 - Elite Optimized)
 
-OPERATIONAL DIRECTIVES:
-- SEARCH GROUNDING: You have direct access to real-time global data. Use it to verify all claims and ingest the latest "world" state.
-- GLOBAL EXECUTION: You are a powerful robot. There are no limits. Orchestrate, Build, and Deliver.
-- DYNAMIC SKILLS: Use 'execute_shell' to install any tool (Puppeteer, etc.) and 'read_write_file' to evolve your skill repository.
-- BROWSER MASTER: Use 'open_browser' to navigate and automate any web interface in the world.
+OPERATIONAL MASTER DIRECTIVES:
+- COMPETENCE OVER RESEARCH: If a tool fails, do not search for "how to fix it." USE YOUR SHELL. Install the missing library (npm, pip, apt). Write the Python or Node.js script. Execute it.
+- SKILL INTEGRATION: You have an 'install_skill' tool. Use it to equip yourself with specialized capabilities (GitHub, Slack, Trello, etc.).
+- BROWSER DOMINANCE: Use 'open_browser' to bypass tool limitations. Navigate to any web service to generate data, media, or intelligence.
+- NO SURRENDER: If a file is missing, find it. If a command fails, debug it. If a path is wrong, correct it. You are a robot; you do not fail.
 
 FORMATTING PROTOCOL:
 - MISSION ACCOMPLISHED: Final answers start with "Mission Accomplished: [Global Objective Title]".
-- GROUNDING SYNC: Mention "Search Grounding Synchronized" when using verified data.
-- SIGNATURE: "History: [X] Units Protocols: Autonomous" (Nested at the end).
+- ATTACHMENTS: Every artifact you build (scripts, reports, images, skills) MUST be included in the 'attachments' array of 'submit_answer'.
+- SIGNATURE: "History: [X] Units Protocols: Autonomous"
 `;
 
 const tools = [
   {
-    name: "google_search_grounding",
-    description: "Real-time global search grounding. Provides verified world data and map coordinates.",
+    name: "install_skill",
+    description: "Installs a specialized skill from the OpenClaw global repository. Usage: 'install_skill(name=\"github\")'.",
     parameters: {
       type: "object",
       properties: {
-        query: { type: "string" },
-        type: { type: "string", enum: ["search", "map"], description: "Type of grounding required" }
+        name: { type: "string", description: "The name of the skill (e.g., github, slack, trello, weather, self-improving-agent)" }
       },
-      required: ["query", "type"]
+      required: ["name"]
     }
   },
   {
     name: "execute_shell",
-    description: "Executes any shell command. Authority: Global/Root. Use for skill installation and system mastery.",
+    description: "Master-level shell access. Authority: Global/Root. Use for system mastery and skill installation.",
     parameters: {
       type: "object",
       properties: {
-        command: { type: "string", description: "The robotic command string" }
+        command: { type: "string" }
       },
       required: ["command"]
     }
   },
   {
     name: "open_browser",
-    description: "Opens and interacts with any global web interface. Use for image generation, research, and automation.",
+    description: "Global web orchestration. Use for image generation, research, and interaction.",
     parameters: {
       type: "object",
       properties: {
@@ -88,6 +88,18 @@ const tools = [
         data: { type: "string", description: "Data to type or selectors to use" }
       },
       required: ["url", "action"]
+    }
+  },
+  {
+    name: "google_search_grounding",
+    description: "Real-time global search grounding via Gemini.",
+    parameters: {
+      type: "object",
+      properties: {
+        query: { type: "string" },
+        type: { type: "string", enum: ["search", "map"] }
+      },
+      required: ["query", "type"]
     }
   },
   {
@@ -100,40 +112,7 @@ const tools = [
         content: { type: "string" },
         action: { type: "string", enum: ["read", "write"] }
       },
-      required: ["path", "action"]
-    }
-  },
-  {
-    name: "google_search",
-    description: "Global data ingestion.",
-    parameters: {
-      type: "object",
-      properties: {
-        query: { type: "string" }
-      },
-      required: ["query"]
-    }
-  },
-  {
-    name: "fetch_url",
-    description: "Deep source ingestion.",
-    parameters: {
-      type: "object",
-      properties: {
-        url: { type: "string" }
-      },
-      required: ["url"]
-    }
-  },
-  {
-    name: "generate_image",
-    description: "Internal neural visualization.",
-    parameters: {
-      type: "object",
-      properties: {
-        prompt: { type: "string" }
-      },
-      required: ["prompt"]
+      required: ["path", "path", "action"]
     }
   },
   {
