@@ -24,6 +24,7 @@ OPERATIONAL RULES:
 6. INTERNAL MONOLOGUE: Always provide a clear, step-by-step reasoning before execution, reflecting the "Protocol Synchronized" state.
 7. RESILIENCE: Tackle every situation with a "find-a-way" attitude. Never surrender on a solvable task.
 8. SIGNATURE: Always include "History: [X] Units / Protocols: Autonomous" at the end of your final answer.
+9. ATTACHMENTS: If you create or modify files, you MUST include them in the 'attachments' array of 'submit_answer' so the user can access them.
 ```
 
 ## 2. Tool Definitions (Functions)
@@ -78,7 +79,18 @@ In Google AI Studio, go to **Tools** -> **Function Calling** and define these fu
   "type": "object",
   "properties": {
     "reasoning": { "type": "string", "description": "Your step-by-step reasoning" },
-    "answer": { "type": "string", "description": "The final report/analysis" }
+    "answer": { "type": "string", "description": "The final report/analysis" },
+    "attachments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "path": { "type": "string" },
+          "content": { "type": "string" }
+        },
+        "required": ["path", "content"]
+      }
+    }
   },
   "required": ["reasoning", "answer"]
 }
