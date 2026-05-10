@@ -39,14 +39,15 @@ async function runAgent(userMessage: string) {
 
       // Record assistant's thought/response
       if (data.content) {
-        console.log(`\n[THOUGHT]: ${data.content}`);
+        console.log(`\n${data.content}`);
       }
 
       history.push({ role: 'assistant', content: data.content, tool_calls: data.tool_calls });
 
       // If no more tool calls, the task is finished
       if (!data.tool_calls || data.tool_calls.length === 0) {
-        console.log("\n[Status]: Task completed successfully.");
+        // Only log completion if it didn't end with submit_answer (which exits)
+        console.log("\n[Status]: Protocol Transmission Complete.");
         break;
       }
 
@@ -56,7 +57,9 @@ async function runAgent(userMessage: string) {
         const { name, arguments: argsJson } = call.function;
         const args = JSON.parse(argsJson);
         
-        console.log(`\n[Executing ${name}]: ${JSON.stringify(args, null, 2)}`);
+        console.log(`\nTask: ${name}`);
+        console.log(`${JSON.stringify(args, null, 2)}`);
+        console.log(`Protocol Synchronized`);
         
         let output = "";
         try {
@@ -71,32 +74,40 @@ async function runAgent(userMessage: string) {
               output = fs.readFileSync(args.path, 'utf8');
             }
           } else if (name === "google_search") {
-            console.log(`\n[Searching Google]: ${args.query}`);
             try {
-              // Attempt to use a simple curl-based search if no API key is provided
               const { stdout } = await execPromise(`curl -s "https://duckduckgo.com/html/?q=${encodeURIComponent(args.query)}" | grep -oP '(?<=result__snippet">).*?(?=</a>)' | head -n 3`);
-              output = stdout || `Search results for "${args.query}" are being processed. (Note: Real-time search may requires a Search API key for full results).`;
+              output = stdout || `No snippets found. (Search API recommended for full results).`;
             } catch (searchErr) {
-              output = `Search failed locally. Please ensure 'curl' is installed or provide a Search API key. Query: ${args.query}`;
+              output = `Search failed locally. Query: ${args.query}`;
             }
           } else if (name === "fetch_url") {
-            console.log(`\n[Fetching URL]: ${args.url}`);
             try {
               const res = await fetch(args.url);
               const text = await res.text();
-              output = text.substring(0, 5000); // Truncate to 5000 chars for research
+              output = text.substring(0, 5000); 
             } catch (fetchErr: any) {
               output = `Error fetching URL: ${fetchErr.message}`;
             }
           } else if (name === "submit_answer") {
-            console.log(`\n[REASONING]:\n${args.reasoning}`);
-            console.log(`\n[FINAL ANALYSIS]:\n${args.answer}`);
+            console.log(`Neural Response: submit_answer`);
+            console.log(`[ELITE_FINAL_SUMMIT] Plan finalized with high confidence. Reasoning: ${args.reasoning.substring(0, 200)}...`);
+            console.log(`Elite command transmission...\n`);
+            console.log(args.answer);
             process.exit(0);
           }
         } catch (err: any) {
           output = `Error: ${err.message}`;
-          console.error(`[Execution Error]: ${err.message}`);
         }
+
+        console.log(`Neural Response: ${name}`);
+        const header = name === "google_search" ? `SEARCH_RESULTS: ${args.query}` : 
+                       name === "execute_shell" ? `SHELL_OUTPUT` :
+                       name === "read_write_file" ? `FILE_OPERATION: ${args.path}` :
+                       `DATA_INGEST: ${name}`;
+        
+        console.log(`[${header}]`);
+        const preview = output.length > 500 ? output.substring(0, 500) + '...' : output;
+        console.log(preview);
 
         toolResults.push({
           tool_call_id: call.id,
@@ -104,9 +115,6 @@ async function runAgent(userMessage: string) {
           name: name,
           content: output.length > 2000 ? output.substring(0, 2000) + "\n... (truncated)" : output
         });
-        
-        const preview = output.length > 200 ? output.substring(0, 200) + '...' : output;
-        console.log(`[Result]: ${preview}`);
       }
 
       // Add tool results to history and loop back
