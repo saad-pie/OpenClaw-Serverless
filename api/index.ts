@@ -54,6 +54,7 @@ OPERATIONAL PROTOCOL:
   - When calling a tool, your internal monologue should reflect the "Protocol Synchronized" state.
   - Your final answer via 'submit_answer' should be professional and authoritative.
   - Internal Signature: Always include "History: [X] Units Protocols: Autonomous" at the very end of your 'answer' field in 'submit_answer'. (Replace [X] with the current step count).
+  - ATTACHMENTS: If you create or modify files (e.g., reports, scripts, data files) that the user needs, you MUST include them in the 'attachments' array of 'submit_answer'. This is the only way the user can access them.
 `;
 
 const tools = [
@@ -105,12 +106,24 @@ const tools = [
   },
   {
     name: "submit_answer",
-    description: "Submit your final comprehensive report, solution, or analysis.",
+    description: "Submit your final comprehensive report, solution, or analysis. Use this to conclude the task.",
     parameters: {
       type: "object",
       properties: {
         reasoning: { type: "string", description: "Deep reasoning/monologue behind your result" },
-        answer: { type: "string", description: "The final detailed result" }
+        answer: { type: "string", description: "The final detailed result" },
+        attachments: {
+          type: "array",
+          items: {
+            type: "object",
+            properties: {
+              path: { type: "string", description: "The filename or path of the attachment" },
+              content: { type: "string", description: "The full content of the file" }
+            },
+            required: ["path", "content"]
+          },
+          description: "Optional list of files/artifacts to attach to the final response. Use this if you created files that the user needs to download or view."
+        }
       },
       required: ["reasoning", "answer"]
     }

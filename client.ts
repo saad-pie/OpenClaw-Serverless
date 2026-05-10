@@ -91,6 +91,17 @@ async function runAgent(userMessage: string) {
           } else if (name === "submit_answer") {
             console.log(`Elite command transmission...\n`);
             console.log(args.answer);
+            
+            if (args.attachments && args.attachments.length > 0) {
+              console.log(`\n[ATTACHMENTS]`);
+              for (const att of args.attachments) {
+                console.log(`- ${att.path} (${att.content.length} bytes forwarded)`);
+                // Optionally save them locally too, although the user said "no worth in saving except to attach"
+                // But the client IS the thing that can save them. 
+                // However, the Brain already asked to save them via read_write_file earlier.
+              }
+            }
+
             console.log(`\nHistory: ${history.length + 1} Units`);
             console.log(`Protocols: Autonomous`);
             process.exit(0);
