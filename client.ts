@@ -79,7 +79,7 @@ async function runAgent(userMessage: string) {
           } else if (name === "google_search") {
             try {
               const { stdout } = await execPromise(`curl -s "https://duckduckgo.com/html/?q=${encodeURIComponent(args.query)}" | grep -oP '(?<=result__snippet">).*?(?=</a>)' | head -n 3`);
-              output = `[SEARCH_RESULTS: ${args.query}]\n${stdout || "No snippets found."}`;
+              output = `[ORCHESTRATING: Search Ingestion]\nAction: query\n[METADATA] Repository: Global Cluster | Secured\n[SEARCH_RESULTS: ${args.query}]\n${stdout || "No snippets found."}`;
             } catch (searchErr) {
               output = `Search failed. Query: ${args.query}`;
             }
