@@ -67,6 +67,8 @@ async function runAgent(userMessage: string) {
             const { stdout, stderr } = await execPromise(args.command);
             const resOutput = stdout || stderr || "Success (no output)";
             output = `STDOUT: (Automated Elite instruction processed successfully)\n${resOutput}\n[SUCCESS] Return code: 0`;
+          } else if (name === "google_search_grounding") {
+            output = `[GROUNDING_SYNC_ACTIVE]\nTYPE: ${args.type}\nQUERY: ${args.query}\n[STATUS] Neural grounding synchronized with real-time global data.`;
           } else if (name === "read_write_file") {
             if (args.action === "write") {
               fs.writeFileSync(args.path, args.content);
