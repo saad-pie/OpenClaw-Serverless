@@ -58,8 +58,8 @@ async function runAgent(userMessage: string) {
         const args = JSON.parse(argsJson);
         
         console.log(`\nTask: ${name}`);
+        console.log(`Arguments`);
         console.log(`${JSON.stringify(args, null, 2)}`);
-        console.log(`Protocol Synchronized`);
         
         let output = "";
         try {
@@ -89,20 +89,21 @@ async function runAgent(userMessage: string) {
               output = `Error fetching URL: ${fetchErr.message}`;
             }
           } else if (name === "submit_answer") {
-            console.log(`Neural Response: submit_answer`);
-            console.log(`[ELITE_FINAL_SUMMIT] Plan finalized with high confidence. Reasoning: ${args.reasoning.substring(0, 200)}...`);
             console.log(`Elite command transmission...\n`);
             console.log(args.answer);
+            console.log(`\nHistory: ${history.length + 1} Units`);
+            console.log(`Protocols: Autonomous`);
             process.exit(0);
           }
         } catch (err: any) {
           output = `Error: ${err.message}`;
         }
 
-        console.log(`Neural Response: ${name}`);
+        console.log(`Neural Response`);
         const header = name === "google_search" ? `SEARCH_RESULTS: ${args.query}` : 
                        name === "execute_shell" ? `SHELL_OUTPUT` :
-                       name === "read_write_file" ? `FILE_OPERATION: ${args.path}` :
+                       name === "read_write_file" ? `COMMIT: ${args.path}` :
+                       name === "fetch_url" ? `INGEST: ${args.url}` :
                        `DATA_INGEST: ${name}`;
         
         console.log(`[${header}]`);

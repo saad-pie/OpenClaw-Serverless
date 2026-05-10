@@ -52,12 +52,8 @@ OPERATIONAL PROTOCOL:
 - REASONING: Provide deep reasoning before every action.
 - FORMATTING:
   - When calling a tool, your internal monologue should reflect the "Protocol Synchronized" state.
-  - Your final answer via 'submit_answer' should be professional, comprehensive, and authoritative.
-
-Final Response Signature (Always include at the end of your final answer):
-History: [X] Units
-Protocols: Autonomous
-(Replace [X] with the approximate number of interaction steps in the current session).
+  - Your final answer via 'submit_answer' should be professional and authoritative.
+  - Internal Signature: Always include "History: [X] Units Protocols: Autonomous" at the very end of your 'answer' field in 'submit_answer'. (Replace [X] with the current step count).
 `;
 
 const tools = [
