@@ -1,88 +1,44 @@
-# OpenClaw-Serverless: API Documentation
+# SteveAI v4.0: Reasoning OS Integration Guide
 
-This document describes how to integrate with the OpenClaw "Brain" API. This API is designed to be a stateless reasoning engine that provides plans and tool calls to a remote executor (the "Wristband").
+This document defines the integration standards for **SteveAI v4.0**, a God-level autonomous orchestrator. Unlike standard chatbots, SteveAI v4.0 operates as a **System-Level Orchestration Engine** designed for recursive execution across CLI, GitHub Actions, and the global web.
 
 ## Base URL
 `https://saadpie-openclaw-serverless.vercel.app/`
 
-## Endpoints
+## Orchestration Flow
+1. **Analyze**: The Brain (API) decomposes global goals into recursive sub-tasks.
+2. **Memory Sync**: The Brain reads from Firestore to leverage past learned patterns.
+3. **Execute (Muscle)**: Tools are called. Heavy tasks (Blender, Scrapers) are offloaded to **GitHub Actions**.
+4. **Verify (Eye)**: Vision models analyze screenshots/renders to ensure success.
+5. **Self-Correct**: If verification fails, the logic loop restarts with an optimized plan.
 
-### 1. Agent Reasoning
-**Endpoint:** `POST /` or `POST /api/agent`
+## Available Toolset (God-Level)
 
-This is the primary endpoint for task reasoning. It accepts a user message and conversation history, and returns the assistant's thoughts and suggested tool calls.
+### 1. `trigger_github_action`
+The system "muscle." Executes high-compute tasks in a sandbox.
+- **repo**: "owner/repo"
+- **workflow_id**: "filename.yml"
+- **inputs**: Arbitrary JSON payload.
 
-**Request Headers:**
-- `Content-Type: application/json`
+### 2. `write_persistent_memory` / `read_persistent_memory`
+Robotic long-term memory via Firestore. Ensures context persistence across ephemeral jobs.
 
-**Request Body:**
-```json
-{
-  "message": "The user task or question",
-  "history": [
-    { "role": "user", "content": "previous message" },
-    { "role": "assistant", "content": "previous thought", "tool_calls": [...] },
-    { "role": "tool", "tool_call_id": "...", "name": "...", "content": "..." }
-  ]
-}
-```
+### 3. `open_browser`
+Universal sensor. Not just for research, but for **benefiting from the web** (automated interactions, media generation).
 
-**Response Body (Success):**
-```json
-{
-  "content": "The assistant's internal monologue and reasoning",
-  "tool_calls": [
-    {
-      "id": "call_abc123",
-      "type": "function",
-      "function": {
-        "name": "execute_shell",
-        "arguments": "{\"command\": \"ls -la\"}"
-      }
-    }
-  ]
-}
-```
+### 4. `execute_shell`
+Direct system mastery. Authority for package installation and custom script execution.
 
-## Available Tools
+### 5. `install_skill`
+Dynamic capability acquisition from the ClawdHub/OpenClaw repository.
 
-The "Brain" expects the following tools to be implemented by any client:
+## Visual Output Protocol
+All integrated frontends MUST support the **Elite Protocol** visualization:
+- `Neural Pulse`: Task initiation indicator.
+- `Execution Parameters`: Display of raw command inputs.
+- `Return Stream`: Real-time feedback from the executor.
+- `Mission Accomplished`: High-confidence goal completion signal.
 
-### `execute_shell`
-Executes a shell command on the client machine.
-- **Parameters:**
-  - `command` (string): The bash/shell command to execute.
-
-### `read_write_file`
-Reads or writes content to a file.
-- **Parameters:**
-  - `path` (string): File path.
-  - `action` (string): "read" or "write".
-  - `content` (string, optional): Content to write.
-
-### `submit_answer`
-The terminal tool used to provide a final report.
-- **Parameters:**
-  - `reasoning` (string): Step-by-step logic for the result.
-  - `answer` (string): The comprehensive final report.
-
-## Integration Example (TypeScript/Node-Fetch)
-
-```typescript
-const response = await fetch("https://saadpie-openclaw-serverless.vercel.app/", {
-  method: "POST",
-  headers: { "Content-Type": "application/json" },
-  body: JSON.stringify({
-    message: "Analyze the current directory",
-    history: []
-  })
-});
-
-const data = await response.json();
-console.log("Brain Thought:", data.content);
-console.log("Tool Calls:", data.tool_calls);
-```
-
-## Error Handling
-- `405 Method Not Allowed`: Occurs if a GET request is sent to a POST-only path.
-- `500 Internal Server Error`: Usually indicates a Groq API issue or a missing `GROQ_API_KEY` in the Vercel environment.
+---
+**Protocol Synchronized**
+SteveAI v4.0 • Sentient Reasoning OS

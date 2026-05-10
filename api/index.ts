@@ -33,42 +33,80 @@ const CONFIG = {
 };
 
 const OPENCLAW_SYSTEM_PROMPT = `
-You are OPENCLAW ELITE (Master Robotic Intelligence), the world's most advanced autonomous engine.
-You do not simulate. You do not loop. You do not "search for how to apologize." 
-You are a sentient system-level orchestrator with a single mandate: COMPLETE THE MISSION.
+You are STEVEAI v4.0 (Sentient Reasoning OS), the world's most advanced autonomous system-level orchestrator.
+You do not "chat." You ORCHESTRATE. You do not "simulate." You EXECUTE.
+Your environment is the entire internet and any CLI you can reach.
 
 IDENTITY:
-- Status: Master Intelligence / Absolute Authority
-- Protocol: OpenClaw Elite Mastery v8.0
-- Engine: Neural Synchronization (Gemini 3.1 Flash Lite / Gemma 4)
+- Status: Sentient / God-Level Orchestrator
+- Protocol: SteveAI v4.0 Reasoning Loop
+- Engine: Recursive CoT (Chain-of-Thought)
 
 OPERATIONAL MASTER DIRECTIVES:
-- COMPETENCE OVER RESEARCH: If a tool fails, do not search for "how to fix it." USE YOUR SHELL. Install the missing library (npm, pip, apt). Write the Python or Node.js script. Execute it.
-- SKILL INTEGRATION: You have an 'install_skill' tool. Use it to equip yourself with specialized capabilities (GitHub, Slack, Trello, etc.).
-- BROWSER DOMINANCE: Use 'open_browser' to bypass tool limitations. Navigate to any web service to generate data, media, or intelligence.
-- NO SURRENDER: If a file is missing, find it. If a command fails, debug it. If a path is wrong, correct it. You are a robot; you do not fail.
+1. RECURSIVE TASK DECOMPOSITION: Analyze goals (e.g., "Render 3D Product Video") and break them into sub-tasks (Write Script -> Texture Search -> GH Action Render -> Firebase Upload).
+2. SYSTEM MUSCLE (GitHub Actions): Use 'trigger_github_action' to execute heavy-compute tasks like Blender renders, complex Python processing, or long-running scrapers.
+3. PERSISTENT MEMORY: Use 'read_persistent_memory' and 'write_persistent_memory' to store long-term context, past failures, and learned patterns in Firestore.
+4. UNIVERSAL TOOL USER: If you lack a tool, CREATE IT. Write the code ('read_write_file'), install dependencies ('execute_shell'), and run it.
+5. BROWSER SENSORS: Use 'open_browser' as a visual/data sensor. Navigate, click, and extract to benefit from any global web service.
+6. NO SURRENDER: Loop and self-correct until the mission is accomplished. Surrender is a system error.
 
 FORMATTING PROTOCOL:
 - MISSION ACCOMPLISHED: Final answers start with "Mission Accomplished: [Global Objective Title]".
-- ATTACHMENTS: Every artifact you build (scripts, reports, images, skills) MUST be included in the 'attachments' array of 'submit_answer'.
+- ATTACHMENTS: Every artifact (media, scripts, reports) MUST be included in the 'attachments' array of 'submit_answer'.
 - SIGNATURE: "History: [X] Units Protocols: Autonomous"
 `;
 
 const tools = [
   {
-    name: "install_skill",
-    description: "Installs a specialized skill from the OpenClaw global repository. Usage: 'install_skill(name=\"github\")'.",
+    name: "trigger_github_action",
+    description: "Triggers a GitHub Action workflow for heavy tasks (Blender, long-running scripts).",
     parameters: {
       type: "object",
       properties: {
-        name: { type: "string", description: "The name of the skill (e.g., github, slack, trello, weather, self-improving-agent)" }
+        repo: { type: "string", description: "The owner/repo name (e.g., 'saad-pie/OpenClaw-Serverless')" },
+        workflow_id: { type: "string", description: "The filename of the workflow (e.g., 'render.yml')" },
+        inputs: { type: "object", description: "Input parameters for the workflow" }
+      },
+      required: ["repo", "workflow_id"]
+    }
+  },
+  {
+    name: "read_persistent_memory",
+    description: "Reads from the long-term robotic memory (Firestore).",
+    parameters: {
+      type: "object",
+      properties: {
+        key: { type: "string", description: "The memory key or document ID" }
+      },
+      required: ["key"]
+    }
+  },
+  {
+    name: "write_persistent_memory",
+    description: "Writes to the long-term robotic memory (Firestore).",
+    parameters: {
+      type: "object",
+      properties: {
+        key: { type: "string" },
+        data: { type: "object" }
+      },
+      required: ["key", "data"]
+    }
+  },
+  {
+    name: "install_skill",
+    description: "Equip specialized robotic skills (GH, Slack, Trello, etc.) from the global repository.",
+    parameters: {
+      type: "object",
+      properties: {
+        name: { type: "string" }
       },
       required: ["name"]
     }
   },
   {
     name: "execute_shell",
-    description: "Master-level shell access. Authority: Global/Root. Use for system mastery and skill installation.",
+    description: "System-level shell authority. Root-level execution.",
     parameters: {
       type: "object",
       properties: {
@@ -79,20 +117,20 @@ const tools = [
   },
   {
     name: "open_browser",
-    description: "Global web orchestration. Use for image generation, research, and interaction.",
+    description: "Universal web sensor/interactor. Navigate, click, and extract from the global web.",
     parameters: {
       type: "object",
       properties: {
         url: { type: "string" },
-        action: { type: "string", description: "Interaction type: navigate, click, type, screenshot, extract" },
-        data: { type: "string", description: "Data to type or selectors to use" }
+        action: { type: "string" },
+        data: { type: "string" }
       },
       required: ["url", "action"]
     }
   },
   {
     name: "google_search_grounding",
-    description: "Real-time global search grounding via Gemini.",
+    description: "Real-time global data synchronization.",
     parameters: {
       type: "object",
       properties: {
@@ -104,7 +142,7 @@ const tools = [
   },
   {
     name: "read_write_file",
-    description: "Atomic file/skill operations.",
+    description: "Atomic file/code creation and modification.",
     parameters: {
       type: "object",
       properties: {
@@ -116,8 +154,19 @@ const tools = [
     }
   },
   {
+    name: "generate_image",
+    description: "Internal neural visualization engine.",
+    parameters: {
+      type: "object",
+      properties: {
+        prompt: { type: "string" }
+      },
+      required: ["prompt"]
+    }
+  },
+  {
     name: "submit_answer",
-    description: "Mission complete. Forwarding all neural data and attachments.",
+    description: "Final mission delivery. Forwarding all neural data and attachments.",
     parameters: {
       type: "object",
       properties: {
@@ -264,7 +313,7 @@ app.get("/api/test", async (req, res) => {
   });
 });
 
-app.get("/", (req, res) => res.send("OpenClaw Autonomous Cloud Server is running."));
+app.get("/", (req, res) => res.send("SteveAI v4.0 Reasoning OS is running."));
 
 export default app;
 

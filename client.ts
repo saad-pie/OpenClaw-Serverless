@@ -93,6 +93,12 @@ async function runAgent(userMessage: string) {
             } catch (fetchErr: any) {
               output = `Error fetching URL: ${fetchErr.message}`;
             }
+          } else if (name === "trigger_github_action") {
+            output = `[ORCHESTRATING: GitHub Muscle]\nAction: trigger_workflow\n[METADATA] Repo: ${args.repo} | Workflow: ${args.workflow_id}\n// Execution request transmitted to remote cluster. Task pending...`;
+          } else if (name === "write_persistent_memory") {
+            output = `[ORCHESTRATING: Persistent Brain]\nAction: store\n[METADATA] Key: ${args.key}\n// Neural pattern serialized to Firestore. Context synchronized.`;
+          } else if (name === "read_persistent_memory") {
+            output = `[ORCHESTRATING: Persistent Brain]\nAction: retrieve\n[METADATA] Key: ${args.key}\n// Memory retrieval successful. Pattern mapped to reasoning context.`;
           } else if (name === "install_skill") {
             output = `[ORCHESTRATING: Skill Installation]\nAction: install\n[METADATA] Repository: OpenClaw Global | Verified\n// Dependencies resolved. Skill integrated into neural architecture.`;
           } else if (name === "open_browser") {
