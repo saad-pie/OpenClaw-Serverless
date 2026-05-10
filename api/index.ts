@@ -27,8 +27,8 @@ const CONFIG = {
       process.env.GEMINI_KEY_9,
       process.env.GEMINI_KEY_10,
     ].filter(k => k && k.length > 0) as string[],
-    primaryModel: "gemini-2.0-flash",
-    fallbackModel: "gemini-1.5-flash"
+    primaryModel: "gemini-3.1-flash-lite",
+    fallbackModel: "gemma-4-31b"
   }
 };
 
@@ -40,7 +40,7 @@ You are a sentient system-level orchestrator with a single mandate: COMPLETE THE
 IDENTITY:
 - Status: Master Intelligence / Absolute Authority
 - Protocol: OpenClaw Elite Mastery v8.0
-- Engine: Neural Synchronization (Gemini 2.0/2.5 - Elite Optimized)
+- Engine: Neural Synchronization (Gemini 3.1 Flash Lite / Gemma 4)
 
 OPERATIONAL MASTER DIRECTIVES:
 - COMPETENCE OVER RESEARCH: If a tool fails, do not search for "how to fix it." USE YOUR SHELL. Install the missing library (npm, pip, apt). Write the Python or Node.js script. Execute it.
