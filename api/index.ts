@@ -28,7 +28,7 @@ const CONFIG = {
       process.env.GEMINI_KEY_10,
     ].filter(k => k && k.length > 0) as string[],
     primaryModel: "gemini-2.0-flash",
-    fallbackModel: "gemini-2.5-flash-native-audio-preview-12-2025"
+    fallbackModel: "gemini-1.5-flash"
   }
 };
 
@@ -112,7 +112,7 @@ const tools = [
         content: { type: "string" },
         action: { type: "string", enum: ["read", "write"] }
       },
-      required: ["path", "path", "action"]
+      required: ["path", "action"]
     }
   },
   {
@@ -243,7 +243,7 @@ app.get("/api/test", async (req, res) => {
           maskedKey,
           status: response.status,
           ok: response.ok,
-          error: data.error?.message || (response.ok ? "None" : "Unknown Error")
+          error: data.error?.message || (response.ok ? "None" : JSON.stringify(data))
         });
       } catch (error: any) {
         results.push({
@@ -272,4 +272,3 @@ if (!process.env.VERCEL) {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
 }
-
