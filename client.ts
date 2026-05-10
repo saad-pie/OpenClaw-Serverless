@@ -93,12 +93,11 @@ async function runAgent(userMessage: string) {
             console.log(args.answer);
             
             if (args.attachments && args.attachments.length > 0) {
-              console.log(`\n[ATTACHMENTS]`);
+              console.log(`\n[NEURAL_ATTACHMENTS_SYNCHRONIZED]`);
               for (const att of args.attachments) {
-                console.log(`- ${att.path} (${att.content.length} bytes forwarded)`);
-                // Optionally save them locally too, although the user said "no worth in saving except to attach"
-                // But the client IS the thing that can save them. 
-                // However, the Brain already asked to save them via read_write_file earlier.
+                console.log(`\n--- BEGIN_FILE: ${att.path} ---`);
+                console.log(att.content);
+                console.log(`--- END_FILE: ${att.path} ---`);
               }
             }
 
