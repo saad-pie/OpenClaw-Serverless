@@ -211,6 +211,59 @@ app.post(["/", "/api/agent"], async (req, res) => {
   }
 });
 
+// Diagnostic Endpoint: Test all keys and models
+app.get("/api/test", async (req, res) => {
+  const keys = CONFIG.gemini.keys;
+  const models = [CONFIG.gemini.primaryModel, CONFIG.gemini.fallbackModel];
+  const results: any[] = [];
+
+  for (const model of models) {
+    for (let i = 0; i < keys.length; i++) {
+      const key = keys[i];
+      const maskedKey = `${key.substring(0, 5)}...${key.substring(key.length - 3)}`;
+      try {
+        const response = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${key}`,
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            model: model,
+            messages: [{ role: "user", content: "hi" }],
+            max_tokens: 1
+          })
+        });
+
+        const data: any = await response.json();
+        
+        results.push({
+          model,
+          keyIndex: i + 1,
+          maskedKey,
+          status: response.status,
+          ok: response.ok,
+          error: data.error?.message || (response.ok ? "None" : "Unknown Error")
+        });
+      } catch (error: any) {
+        results.push({
+          model,
+          keyIndex: i + 1,
+          maskedKey,
+          status: "Error",
+          ok: false,
+          error: error.message
+        });
+      }
+    }
+  }
+
+  res.json({
+    totalKeys: keys.length,
+    results
+  });
+});
+
 app.get("/", (req, res) => res.send("OpenClaw Autonomous Cloud Server is running."));
 
 export default app;
