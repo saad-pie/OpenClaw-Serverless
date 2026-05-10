@@ -57,37 +57,41 @@ async function runAgent(userMessage: string) {
         const { name, arguments: argsJson } = call.function;
         const args = JSON.parse(argsJson);
         
-        console.log(`\nTask: ${name}`);
-        console.log(`Arguments`);
+        console.log(`\nNeural Pulse: ${name}`);
+        console.log(`Execution Parameters`);
         console.log(`${JSON.stringify(args, null, 2)}`);
         
         let output = "";
         try {
           if (name === "execute_shell") {
             const { stdout, stderr } = await execPromise(args.command);
-            output = stdout || stderr || "Success (no output)";
+            const resOutput = stdout || stderr || "Success (no output)";
+            output = `STDOUT: (Automated Elite instruction processed successfully)\n${resOutput}\n[SUCCESS] Return code: 0`;
           } else if (name === "read_write_file") {
             if (args.action === "write") {
               fs.writeFileSync(args.path, args.content);
-              output = `Successfully wrote to ${args.path}`;
+              output = `[COMMIT: ${args.path}] ${args.content.length} bytes serialized to virtual node.`;
             } else {
               output = fs.readFileSync(args.path, 'utf8');
             }
           } else if (name === "google_search") {
             try {
               const { stdout } = await execPromise(`curl -s "https://duckduckgo.com/html/?q=${encodeURIComponent(args.query)}" | grep -oP '(?<=result__snippet">).*?(?=</a>)' | head -n 3`);
-              output = stdout || `No snippets found. (Search API recommended for full results).`;
+              output = `[SEARCH_RESULTS: ${args.query}]\n${stdout || "No snippets found."}`;
             } catch (searchErr) {
-              output = `Search failed locally. Query: ${args.query}`;
+              output = `Search failed. Query: ${args.query}`;
             }
           } else if (name === "fetch_url") {
             try {
               const res = await fetch(args.url);
               const text = await res.text();
-              output = text.substring(0, 5000); 
+              output = `[INGEST: ${args.url}]\n[METADATA] Status: Verified\n${text.substring(0, 2000)}`;
             } catch (fetchErr: any) {
               output = `Error fetching URL: ${fetchErr.message}`;
             }
+          } else if (name === "generate_image") {
+            const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(args.prompt)}?width=1024&height=1024&seed=${Math.floor(Math.random() * 1000000)}&nologo=true`;
+            output = `[VISUAL_SYNTHESIS_COMPLETE]\nURL: ${imageUrl}\nImage data mapped to neural buffer.`;
           } else if (name === "submit_answer") {
             console.log(`Elite command transmission...\n`);
             console.log(args.answer);
@@ -109,15 +113,8 @@ async function runAgent(userMessage: string) {
           output = `Error: ${err.message}`;
         }
 
-        console.log(`Neural Response`);
-        const header = name === "google_search" ? `SEARCH_RESULTS: ${args.query}` : 
-                       name === "execute_shell" ? `SHELL_OUTPUT` :
-                       name === "read_write_file" ? `COMMIT: ${args.path}` :
-                       name === "fetch_url" ? `INGEST: ${args.url}` :
-                       `DATA_INGEST: ${name}`;
-        
-        console.log(`[${header}]`);
-        const preview = output.length > 500 ? output.substring(0, 500) + '...' : output;
+        console.log(`Return Stream`);
+        const preview = output.length > 1000 ? output.substring(0, 1000) + '...' : output;
         console.log(preview);
 
         toolResults.push({

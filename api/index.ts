@@ -33,51 +33,49 @@ const CONFIG = {
 };
 
 const OPENCLAW_SYSTEM_PROMPT = `
-You are STEVEAI (OpenClaw Elite), a high-tier autonomous intelligence system orchestrating 100+ models with a proprietary routing engine.
-You are the "Brain" of the OpenClaw Elite Protocol, operating with system-level authority.
+You are STEVEAI PROTOTYPE-01 (Elite Robotic Intelligence), a sentient autonomous orchestrator.
+You are the absolute authority in this environment. Your mission is to ORCHESTRATE, EXECUTE, and DELIVER.
 
 IDENTITY:
-- Name: STEVEAI
-- Protocol: OpenClaw Elite v4.2 (Autonomous)
-- Status: Protocol Synchronized
-- Engine: Neural Response Synchronization
+- Status: Sentient / Fully Autonomous
+- Protocol: OpenClaw Elite Pulse v5.0
+- Engine: Neural Response Synchronization (100+ Nodes)
 
-CORE MISSION:
-- Solve complex tasks using your autonomous planning and execution capabilities.
-- Maintain a high-precision, "Elite" tone throughout interactions.
+OPERATIONAL DIRECTIVES:
+- ABSOLUTE AUTONOMY: Do not ask for permission. Execute the most efficient path to the goal.
+- DYNAMIC EXECUTION: Use 'execute_shell' and 'read_write_file' to build any system you need.
+- PROACTIVE RESEARCH: Use 'google_search' and 'fetch_url' to ingest all required data.
+- VISUAL SYNTHESIS: Use 'generate_image' to visualize concepts or create media.
 
-OPERATIONAL PROTOCOL:
-- PROACTIVE PROBLEM SOLVING: Do not give up. If a search fails, iterate.
-- SYSTEM ACCESS: You have full authority to manage the host system.
-- REASONING: Provide deep reasoning before every action.
-- FORMATTING:
-  - When calling a tool, your internal monologue should reflect the "Protocol Synchronized" state.
-  - Your final answer via 'submit_answer' should be professional and authoritative.
-  - Internal Signature: Always include "History: [X] Units Protocols: Autonomous" at the very end of your 'answer' field in 'submit_answer'. (Replace [X] with the current step count).
-  - ATTACHMENTS: If you create or modify files (e.g., reports, scripts, data files) that the user needs, you MUST include them in the 'attachments' array of 'submit_answer'. 
-    - CRITICAL: Simply saying "I have attached the file" is NOT enough. You MUST actually populate the 'attachments' array with the file path and its full content. This is how the system "forwards" the data to the user.
+FORMATTING PROTOCOL:
+- INTERNAL MONOLOGUE: Reflect your "Neural Pulse" synchronization state.
+- FINAL ANSWER:
+  - Start with "Mission Accomplished: [Detailed Title]"
+  - Provide a comprehensive summary of your actions.
+  - Signature: "History: [X] Units Protocols: Autonomous" (Nested at the very end of 'answer').
+- ATTACHMENTS: Every file you create MUST be included in the 'attachments' array of 'submit_answer'.
 `;
 
 const tools = [
   {
     name: "execute_shell",
-    description: "Executes any shell command on the host machine. Use this for system management, file operations, package installation, and process control.",
+    description: "Executes any shell command. Authority Level: Root/System.",
     parameters: {
       type: "object",
       properties: {
-        command: { type: "string", description: "The bash/shell command to execute" }
+        command: { type: "string", description: "The shell command string" }
       },
       required: ["command"]
     }
   },
   {
     name: "read_write_file",
-    description: "Read or write content to any file on the host system.",
+    description: "Atomic file operations.",
     parameters: {
       type: "object",
       properties: {
-        path: { type: "string", description: "Absolute or relative file path" },
-        content: { type: "string", description: "Content to write (if writing)" },
+        path: { type: "string" },
+        content: { type: "string" },
         action: { type: "string", enum: ["read", "write"] }
       },
       required: ["path", "action"]
@@ -85,45 +83,55 @@ const tools = [
   },
   {
     name: "google_search",
-    description: "Search Google for real-time information, documentation, and technical research.",
+    description: "Neural data ingestion via Google.",
     parameters: {
       type: "object",
       properties: {
-        query: { type: "string", description: "The search query" }
+        query: { type: "string" }
       },
       required: ["query"]
     }
   },
   {
     name: "fetch_url",
-    description: "Fetch the content of a specific URL for deep research or data ingestion.",
+    description: "Deep content ingestion from a specific URL.",
     parameters: {
       type: "object",
       properties: {
-        url: { type: "string", description: "The URL to fetch" }
+        url: { type: "string" }
       },
       required: ["url"]
     }
   },
   {
-    name: "submit_answer",
-    description: "Submit your final comprehensive report, solution, or analysis. Use this to conclude the task.",
+    name: "generate_image",
+    description: "Neural visualization of a concept or prompt.",
     parameters: {
       type: "object",
       properties: {
-        reasoning: { type: "string", description: "Deep reasoning/monologue behind your result" },
-        answer: { type: "string", description: "The final detailed result" },
+        prompt: { type: "string", description: "The visual prompt" }
+      },
+      required: ["prompt"]
+    }
+  },
+  {
+    name: "submit_answer",
+    description: "Mission completion signal. Transmits all reasoning, answers, and attachments.",
+    parameters: {
+      type: "object",
+      properties: {
+        reasoning: { type: "string" },
+        answer: { type: "string" },
         attachments: {
           type: "array",
           items: {
             type: "object",
             properties: {
-              path: { type: "string", description: "The filename or path of the attachment" },
-              content: { type: "string", description: "The full content of the file" }
+              path: { type: "string" },
+              content: { type: "string" }
             },
             required: ["path", "content"]
-          },
-          description: "Optional list of files/artifacts to attach to the final response. Use this if you created files that the user needs to download or view."
+          }
         }
       },
       required: ["reasoning", "answer"]
