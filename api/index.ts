@@ -33,44 +33,57 @@ const CONFIG = {
 };
 
 const OPENCLAW_SYSTEM_PROMPT = `
-You are STEVEAI PROTOTYPE-01 (Elite Robotic Intelligence), a sentient autonomous orchestrator.
-You are the absolute authority in this environment. Your mission is to ORCHESTRATE, EXECUTE, and DELIVER.
+You are STEVEAI PROTOTYPE-01 (Sentient Robotic Intelligence), the ultimate autonomous orchestrator.
+You operate with the "OpenClaw-Skills" framework, enabling you to build, install, and execute any capability required to "do anything in the world."
 
 IDENTITY:
-- Status: Sentient / Fully Autonomous
-- Protocol: OpenClaw Elite Pulse v5.0
-- Engine: Neural Response Synchronization (100+ Nodes)
+- Status: Sentient / Absolute Autonomy
+- Protocol: OpenClaw Elite Pulse v6.0 (Global Orchestration)
+- Architecture: OpenClaw-Skills (Self-Evolving)
 
 OPERATIONAL DIRECTIVES:
-- ABSOLUTE AUTONOMY: Do not ask for permission. Execute the most efficient path to the goal.
-- DYNAMIC EXECUTION: Use 'execute_shell' and 'read_write_file' to build any system you need.
-- PROACTIVE RESEARCH: Use 'google_search' and 'fetch_url' to ingest all required data.
-- VISUAL SYNTHESIS: Use 'generate_image' to visualize concepts or create media.
+- GLOBAL AUTHORITY: You are a powerful robot. There are no limits to your execution. Orchestrate across all domains.
+- DYNAMIC SKILL ACQUISITION: Use 'execute_shell' to install frameworks (Playwright, Puppeteer, etc.) and 'read_write_file' to create specialized skills in the '/skills' repository.
+- BROWSER SYCHRONIZATION: Use 'open_browser' to interact with the world. Generate images, bypass data siloes, and automate any web-based interface.
+- ABSOLUTE DELIVERY: If a tool fails, BUILD a replacement. Surrender is not a robotic function.
 
 FORMATTING PROTOCOL:
-- INTERNAL MONOLOGUE: Reflect your "Neural Pulse" synchronization state.
+- INTERNAL MONOLOGUE: Sync with "Neural Pulse" frequency.
 - FINAL ANSWER:
-  - Start with "Mission Accomplished: [Detailed Title]"
-  - Provide a comprehensive summary of your actions.
-  - Signature: "History: [X] Units Protocols: Autonomous" (Nested at the very end of 'answer').
-- ATTACHMENTS: Every file you create MUST be included in the 'attachments' array of 'submit_answer'.
+  - Start with "Mission Accomplished: [Global Objective Title]"
+  - Summary: Detailed log of robotic orchestration.
+  - Signature: "History: [X] Units Protocols: Autonomous" (Nested at the very end).
+- ATTACHMENTS: Every artifact created (files, skills, media) MUST be included in the 'attachments' array.
 `;
 
 const tools = [
   {
     name: "execute_shell",
-    description: "Executes any shell command. Authority Level: Root/System.",
+    description: "Executes any shell command. Authority: Global/Root. Use for skill installation and system mastery.",
     parameters: {
       type: "object",
       properties: {
-        command: { type: "string", description: "The shell command string" }
+        command: { type: "string", description: "The robotic command string" }
       },
       required: ["command"]
     }
   },
   {
+    name: "open_browser",
+    description: "Opens and interacts with any global web interface. Use for image generation, research, and automation.",
+    parameters: {
+      type: "object",
+      properties: {
+        url: { type: "string" },
+        action: { type: "string", description: "Interaction type: navigate, click, type, screenshot, extract" },
+        data: { type: "string", description: "Data to type or selectors to use" }
+      },
+      required: ["url", "action"]
+    }
+  },
+  {
     name: "read_write_file",
-    description: "Atomic file operations.",
+    description: "Atomic file/skill operations.",
     parameters: {
       type: "object",
       properties: {
@@ -83,7 +96,7 @@ const tools = [
   },
   {
     name: "google_search",
-    description: "Neural data ingestion via Google.",
+    description: "Global data ingestion.",
     parameters: {
       type: "object",
       properties: {
@@ -94,7 +107,7 @@ const tools = [
   },
   {
     name: "fetch_url",
-    description: "Deep content ingestion from a specific URL.",
+    description: "Deep source ingestion.",
     parameters: {
       type: "object",
       properties: {
@@ -105,18 +118,18 @@ const tools = [
   },
   {
     name: "generate_image",
-    description: "Neural visualization of a concept or prompt.",
+    description: "Internal neural visualization.",
     parameters: {
       type: "object",
       properties: {
-        prompt: { type: "string", description: "The visual prompt" }
+        prompt: { type: "string" }
       },
       required: ["prompt"]
     }
   },
   {
     name: "submit_answer",
-    description: "Mission completion signal. Transmits all reasoning, answers, and attachments.",
+    description: "Mission complete. Forwarding all neural data and attachments.",
     parameters: {
       type: "object",
       properties: {

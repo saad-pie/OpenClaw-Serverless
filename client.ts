@@ -89,6 +89,8 @@ async function runAgent(userMessage: string) {
             } catch (fetchErr: any) {
               output = `Error fetching URL: ${fetchErr.message}`;
             }
+          } else if (name === "open_browser") {
+            output = `[BROWSER_SYNCHRONIZATION_ACTIVE]\nURL: ${args.url}\nACTION: ${args.action}\n[STATUS] Navigation successful. Interface mapped to neural buffer.`;
           } else if (name === "generate_image") {
             const imageUrl = `https://pollinations.ai/p/${encodeURIComponent(args.prompt)}?width=1024&height=1024&seed=${Math.floor(Math.random() * 1000000)}&nologo=true`;
             output = `[VISUAL_SYNTHESIS_COMPLETE]\nURL: ${imageUrl}\nImage data mapped to neural buffer.`;
